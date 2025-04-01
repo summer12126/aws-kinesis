@@ -1,0 +1,43 @@
+# aws console 
+
+# get the AWS CLI version
+aws --version
+
+# PRODUCER
+#CLIv2
+# Kinesis 스트림에 레코드 추가 (CLI v2)
+# --stream-name: 데이터를 전송할 스트림 이름
+# --partition-key: 데이터를 특정 샤드로 라우팅하는 데 사용되는 키
+# --data: 스트림에 전송할 실제 데이터
+# --cli-binary-format: 바이너리 데이터 형식 지정 (v2에서 필요)
+
+aws kinesis put-record --stream-name demostream --partition-key user1 --data "user signup" --cli-binary format raw-in-base64
+
+# 두 번째 레코드 추가 - 로그인 이벤트
+aws kinesis put-record --stream-name demostream --partition-key user1 --data "user signin" --cli-binary format raw-in-base64
+
+# 세 번째 레코드 추가 - 불완전한 데이터
+aws kinesis put-record --stream-name demostream --partition-key user1 --data "user " --cli-binary format raw-in-base64
+
+
+#CLIv1
+# Kinesis 스트림에 레코드 추가 (CLI v1)
+# CLI v1에서는 --cli-binary-format 파라미터가 필요하지 않음
+aws kinesis put-record --stream-name demostream --data "user"
+
+
+# consumer
+# describe the tream
+# 스트림의 상세 정보(샤드 수, 상태 등)를 확인하는 명령어
+aws kinesis describe-stream --stream-name demostream
+
+# Consume some data
+# 샤드 이터레이터 가져오기
+# --shard-id: 데이터를 읽을 샤드 ID
+# --shard-iterator-type: 이터레이터 유형 (TRIM_HORIZON은 가장 오래된 레코드부터 시작)
+aws kinesis get-shard-iterator --stream-name demostream --shard-id shardId-000000000000 --shard-iterator-type TRIM_HORIZON
+
+# 샤드에서 레코드 가져오기
+# 이전 명령어에서 반환된 샤드 이터레이터를 사용하여 실제 데이터를 가져옴
+aws kinesis get-records --hsard-iterator <이터레이터값>
+ 
