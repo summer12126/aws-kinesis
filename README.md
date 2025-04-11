@@ -89,5 +89,3 @@ aws kinesis get-records --shard-iterator
 - The shard iterator expires after a short period, so you may need to request a new one
 - Check stream status before attempting to read or write data
 
----
-Answer from Perplexity: pplx.ai/share
